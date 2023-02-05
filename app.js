@@ -41,17 +41,29 @@ app.post("/", function(req, res){
         auth: "anant1:244f62a5694f46f0d347f695c4c2d616-us9"
     }
 
-    const rr = https.request(url, options, function(response){
+    const request = https.request(url, options, function(response){
+
+        if (response.statusCode === -3008){
+            res.sendFile(__dirname + "/failure.html");
+        }
+        else {
+            res.sendFile(__dirname + "/success.html");
+        }
+
         response.on("data", function(data){
             console.log(JSON.parse(data));
         })
     });
 
-    rr.write(jsonData);
-    rr.end();
+    request.write(jsonData);
+    request.end();
 
     //console.log(firstName, lastName, email);
 
+});
+
+app.post("/failure", function(req, res){
+    res.redirect("/");
 });
 
 app.listen(3000, function(){
